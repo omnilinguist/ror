@@ -1,0 +1,42 @@
+Hello <%= session[:username] %>,<br/>
+Current balance is: <%= session[:players][1].balance %><br/>
+
+<% if !session[:bet] %>
+  <form method='post' action='/game/bet'>
+    Enter bet: <input name='bet'/>
+    <input type='submit' value='Bet'/>
+  </form>
+<% elsif !session[:action] %>
+  You bet <%= session[:bet] %><br/>
+
+  Dealer cards:<br/>
+  <table>
+    <tr>
+      <% j = 0 %>
+      <% session[:players][0].hand.each do |i| %>
+        <td>
+          <img src="/images/cards/<%= ((j == 0 && !session[:showDealer]) ? "cover.jpg" : get_card_path(i)) %>"/>
+        </td>
+        <% j += 1 %>
+      <% end %>
+    </tr>
+  </table>
+
+  Your cards:<br/>
+  <table>
+    <tr>
+      <% session[:players][1].hand.each do |i| %>
+        <td>
+          <img src="/images/cards/<%= get_card_path i %>"/>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+
+  <% if session[:next_page] %>
+    <a href="/game<%= session[:next_page] %>"><button class="btn btn-info">Next</button></a>
+  <% else %>
+    <a href="/game/hit"><button class="btn btn-success">Hit</button></a>
+    <a href="/game/stay"><button class="btn btn-info">Stay</button></a>
+  <% end %>
+<% end %>
